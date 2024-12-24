@@ -18,13 +18,27 @@ def main():
     if choice == '1':
         # Использование готовой модели
         f = FortuneTeller(None)  # Пустой датасет, так как будем загружать готовую модель
+
+        # Спрашиваем у пользователя путь к тестовому датасету или оставляем стандартный
+        test_dataset_path = input("Введите путь к тестовому датасету (оставьте пустым для использования 'data/test.csv'): ").strip()
+        if not test_dataset_path:
+            test_dataset_path = 'data/test.csv'
+
         try:
-            f.load()
+            f.load()  # Загрузка готовой модели
             print("Готовая модель успешно загружена!")
+
+            # Проверим наличие указанного пользователем файла
+            import os
+            if os.path.exists(test_dataset_path):
+                print(f"Будет использоваться тестовый файл: {test_dataset_path}")
+            else:
+                print(f"Ошибка: файл {test_dataset_path} не найден.")
+                return
         except Exception as e:
             print(f"Ошибка при загрузке модели: {e}")
             return
-        
+    
     elif choice == '2':
         # Обучение новой модели
         print("Введите названия файлов с данными (нажмите Enter для использования файлов по умолчанию):")
