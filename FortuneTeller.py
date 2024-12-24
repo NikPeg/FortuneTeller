@@ -27,7 +27,7 @@ class FortuneTeller:
 
     def test_train(self, verbose=1):
         # Filter data for the training set (years before 2015)
-        self.train = df[df['date'].dt.year < 2015].copy()
+        self.train = self.df[self.df['date'].dt.year < 2015].copy()
         self.train = self.train[self.train['item_id'] == self.item].copy()
         
         # Filter data for the testing set (year 2015)
