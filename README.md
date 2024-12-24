@@ -19,14 +19,16 @@ FortuneTeller CLI — это интерфейс командной строки 
   
 На вашем терминале выполните следующие команды:
   
-```# Создать виртуальную среду
+```
+# Создать виртуальную среду
 python -m venv venv
   
 # Активировать виртуальную среду
 # Windows:
 venv\Scripts\activate
 # macOS/Linux:
-source venv/bin/activate```
+source venv/bin/activate
+```
 Установка библиотек:
 
 Убедитесь, что файл requirements.txt находится в той же директории, и выполните команду:
