@@ -130,7 +130,7 @@ class FortuneTeller:
             self.train_data_ml = None
     
     def predict(self, test=None):
-        if test:
+        if test is not None:
             self.test = test
         self.test['date'] = pd.to_datetime(self.test['date'])
         self.test = self.test.sort_values(by='date')
