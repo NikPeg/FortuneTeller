@@ -35,6 +35,9 @@ def main():
             else:
                 print(f"Ошибка: файл {test_dataset_path} не найден.")
                 return
+            # Предсказываем результаты по обученной модели
+            test = pd.read_csv(test_dataset_path)
+            f.predict(test)
         except Exception as e:
             print(f"Ошибка при загрузке модели: {e}")
             return

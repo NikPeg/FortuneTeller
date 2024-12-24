@@ -107,8 +107,6 @@ class FortuneTeller:
         with open(file_path, "wb") as file:
             pickle.dump(data_to_save, file)
         
-        print(f"Данные успешно сохранены в файл: {file_path}")
-
     def load(self, file_path="model_data.pkl"):
         """
         Загружает данные из файла и пересоздаёт lgb.Dataset.
@@ -130,8 +128,6 @@ class FortuneTeller:
             self.train_data_ml = lgb.Dataset(self.X_train_ml, label=y_train)
         else:
             self.train_data_ml = None
-    
-        print(f"Данные успешно загружены из файла: {file_path}")
     
     def predict(self, test=None):
         if test:
