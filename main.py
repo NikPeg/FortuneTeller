@@ -29,7 +29,6 @@ def main():
             print("Готовая модель успешно загружена!")
 
             # Проверим наличие указанного пользователем файла
-            import os
             if os.path.exists(test_dataset_path):
                 print(f"Будет использоваться тестовый файл: {test_dataset_path}")
             else:
