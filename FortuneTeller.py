@@ -92,7 +92,7 @@ class FortuneTeller:
     def save(self, file_path="model_data.pkl"):
         """
         Сохраняет необходимые данные в один файл.
-    
+
         Параметры:
         - file_path (str): путь к файлу, куда сохраняются данные.
         """
@@ -100,13 +100,14 @@ class FortuneTeller:
         data_to_save = {
             "train": self.train,
             "X_train_ml": self.X_train_ml,
-            "y_train": self.train_data_ml.get_label() if hasattr(self.train_data_ml, "get_label") else None
+            "y_train": self.train_data_ml.get_label() if hasattr(self.train_data_ml, "get_label") else None,
+            "model_ml": self.model_ml if hasattr(self, "model_ml") else None
         }
-        
+
         # Сохраняем данные в файл с помощью pickle
         with open(file_path, "wb") as file:
-            pickle.dump(data_to_save, file)
-        
+            pickle.dump(data_to_save, file)   
+    
     def load(self, file_path="model_data.pkl"):
         """
         Загружает данные из файла и пересоздаёт lgb.Dataset.
@@ -122,7 +123,8 @@ class FortuneTeller:
         self.train = loaded_data["train"]
         self.X_train_ml = loaded_data["X_train_ml"]
         y_train = loaded_data["y_train"]
-        
+        self.model_ml = loaded_data["model_ml"]  # Загружаем модель
+ 
         # Пересоздаём lgb.Dataset
         if self.X_train_ml is not None and y_train is not None:
             self.train_data_ml = lgb.Dataset(self.X_train_ml, label=y_train)
