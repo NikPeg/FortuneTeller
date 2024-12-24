@@ -1,113 +1,92 @@
 import pandas as pd
+import os
 from FortuneTeller import FortuneTeller
 
 def main():
-    print("Добро пожаловать в программу предсказания продаж с использованием FortuneTeller!")
+    print("Добро пожаловать в FortuneTeller CLI!")
+    print("Вы хотите использовать готовую модель или обучить новую?")
+    print("1: Использовать готовую модель")
+    print("2: Обучить новую модель")
     
-    # Шаг 1: Загрузка данных
-    print("\nДля начала загрузим необходимые данные. Введите названия файлов (или оставьте пустым для выхода из программы).")
-    
-    sales_file = input("Введите путь к файлу с данными о продажах (например, 'data/shop_sales.csv'): ")
-    if not sales_file:
-        print("Выход из программы.")
-        return
-    
-    calendar_file = input("Введите путь к файлу с календарными данными (например, 'data/shop_sales_dates.csv'): ")
-    if not calendar_file:
-        print("Выход из программы.")
-        return
-    
-    prices_file = input("Введите путь к файлу с данными о ценах (например, 'data/shop_sales_prices.csv'): ")
-    if not prices_file:
-        print("Выход из программы.")
-        return
-
-    try:
-        # Загрузка данных
-        sales = pd.read_csv(sales_file)
-        calendar = pd.read_csv(calendar_file)
-        prices = pd.read_csv(prices_file)
-    except Exception as e:
-        print(f"Ошибка загрузки данных: {e}")
-        return
-
-    # Шаг 2: Предобработка данных
-    print("\nПреобразуем данные...")
-    try:
-        calendar['date'] = pd.to_datetime(calendar['date'])  # Преобразование дат
-        sales['date_id'] = sales['date_id'].astype(int)  # Преобразование идентификатора даты в int
-        
-        # Объединение данных
-        sales_calendar_merged = pd.merge(sales, calendar, how='left', on='date_id')
-        df = pd.merge(
-            sales_calendar_merged, 
-            prices, 
-            how='left', 
-            on=['item_id', 'store_id', 'wm_yr_wk']
-        )
-        
-        df['date'] = pd.to_datetime(df['date'])  # Преобразование к типу datetime
-    except Exception as e:
-        print(f"Ошибка при предобработке данных: {e}")
-        return
-
-    print("Данные подготовлены!")
-
-    # Шаг 3: Создание объекта FortuneTeller
-    print("\nСоздаем объект FortuneTeller...")
-    try:
-        f = FortuneTeller(df)
-    except Exception as e:
-        print(f"Ошибка при создании FortuneTeller: {e}")
-        return
-
-    # Шаг 4: Тренировка и прогнозирование
     while True:
-        print("\nЧто вы хотите сделать?")
-        print("1. Разделить данные на тестовую и обучающую выборки")
-        print("2. Обучить модель")
-        print("3. Построить прогнозы")
-        print("4. Оценить качество модели")
-        print("5. Показать результаты")
-        print("6. Выйти")
-
-        choice = input("Введите номер действия: ")
-
-        if choice == "1":
-            try:
-                f.test_train()
-                print("Данные успешно разделены на тестовую и обучающую выборки!")
-            except Exception as e:
-                print(f"Ошибка при разделении данных: {e}")
-        elif choice == "2":
-            try:
-                f.fit()
-                print("Модель успешно обучена!")
-            except Exception as e:
-                print(f"Ошибка при обучении модели: {e}")
-        elif choice == "3":
-            try:
-                f.predict()
-                print("Прогнозы успешно построены!")
-            except Exception as e:
-                print(f"Ошибка при построении прогнозов: {e}")
-        elif choice == "4":
-            try:
-                f.evaluate()
-                print("Качество модели успешно оценено!")
-            except Exception as e:
-                print(f"Ошибка при оценке модели: {e}")
-        elif choice == "5":
-            try:
-                f.show()
-                print("Результаты успешно показаны!")
-            except Exception as e:
-                print(f"Ошибка при отображении результатов: {e}")
-        elif choice == "6":
-            print("Выходим из программы. До свидания!")
+        choice = input("Введите 1 или 2: ").strip()
+        if choice in ['1', '2']:
             break
         else:
-            print("Неверный выбор. Пожалуйста, введите номер действия от 1 до 6.")
+            print("Неверный ввод. Пожалуйста, введите 1 или 2.")
+    
+    if choice == '1':
+        # Использование готовой модели
+        f = FortuneTeller(None)  # Пустой датасет, так как будем загружать готовую модель
+        try:
+            f.load()
+            print("Готовая модель успешно загружена!")
+        except Exception as e:
+            print(f"Ошибка при загрузке модели: {e}")
+            return
+        
+    elif choice == '2':
+        # Обучение новой модели
+        print("Введите названия файлов с данными (нажмите Enter для использования файлов по умолчанию):")
+        sales_file = input("Файл с продажами (по умолчанию 'data/shop_sales.csv'): ").strip() or 'data/shop_sales.csv'
+        calendar_file = input("Файл с календарем (по умолчанию 'data/shop_sales_dates.csv'): ").strip() or 'data/shop_sales_dates.csv'
+        prices_file = input("Файл с ценами (по умолчанию 'data/shop_sales_prices.csv'): ").strip() or 'data/shop_sales_prices.csv'
+        
+        try:
+            # Проверяем существование файлов
+            if not os.path.exists(sales_file):
+                raise FileNotFoundError(f"Файл '{sales_file}' не найден.")
+            if not os.path.exists(calendar_file):
+                raise FileNotFoundError(f"Файл '{calendar_file}' не найден.")
+            if not os.path.exists(prices_file):
+                raise FileNotFoundError(f"Файл '{prices_file}' не найден.")
+            
+            # Загружаем данные
+            sales = pd.read_csv(sales_file)
+            calendar = pd.read_csv(calendar_file)
+            prices = pd.read_csv(prices_file)
+
+            # Преобразование полей в удобные типы
+            calendar['date'] = pd.to_datetime(calendar['date'])  # Преобразование даты в объект datetime
+            sales['date_id'] = sales['date_id'].astype(int)  # Преобразование идентификатора даты в int
+
+            # Шаг 1: Объединяем sales с calendar по полю `date_id`
+            sales_calendar_merged = pd.merge(sales, calendar, how='left', on='date_id')
+
+            # Шаг 2: Объединяем с prices по полям `item_id`, `store_id` и `wm_yr_wk`
+            df = pd.merge(
+                sales_calendar_merged,
+                prices,
+                how='left',
+                on=['item_id', 'store_id', 'wm_yr_wk']
+            )
+
+            # Преобразование даты в объект datetime
+            df['date'] = pd.to_datetime(df['date'])
+
+            # Создаем объект FortuneTeller
+            f = FortuneTeller(df)
+            print("Данные успешно загружены и обработаны!")
+
+            # Выполняем обучение и прогнозирование
+            f.test_train()
+            f.fit()
+            f.predict()
+            f.save()
+            print("Модель успешно обучена и сохранена!")
+        
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+            return
+
+    # Оценка и визуализация модели
+    try:
+        f.evaluate()
+        f.show()
+    except Exception as e:
+        print(f"Произошла ошибка при оценке или визуализации: {e}")
+    
+    print("Работа завершена!")
 
 if __name__ == "__main__":
     main()
