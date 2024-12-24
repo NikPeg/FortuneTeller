@@ -47,7 +47,8 @@ def main():
         sales_file = input("Файл с продажами (по умолчанию 'data/shop_sales.csv'): ").strip() or 'data/shop_sales.csv'
         calendar_file = input("Файл с календарем (по умолчанию 'data/shop_sales_dates.csv'): ").strip() or 'data/shop_sales_dates.csv'
         prices_file = input("Файл с ценами (по умолчанию 'data/shop_sales_prices.csv'): ").strip() or 'data/shop_sales_prices.csv'
-        
+        item = input("Название товара (по умолчанию 'STORE_2_085'): ").strip() or 'STORE_2_085'
+
         try:
             # Проверяем существование файлов
             if not os.path.exists(sales_file):
@@ -81,7 +82,7 @@ def main():
             df['date'] = pd.to_datetime(df['date'])
 
             # Создаем объект FortuneTeller
-            f = FortuneTeller(df)
+            f = FortuneTeller(df, item)
             print("Данные успешно загружены и обработаны!")
 
             # Выполняем обучение и прогнозирование
