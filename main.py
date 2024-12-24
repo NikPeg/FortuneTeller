@@ -23,7 +23,8 @@ def main():
         test_dataset_path = input("Введите путь к тестовому датасету (оставьте пустым для использования 'data/test.csv'): ").strip()
         if not test_dataset_path:
             test_dataset_path = 'data/test.csv'
-
+        item = input("Название товара (по умолчанию 'STORE_2_085'): ").strip() or 'STORE_2_085'
+        f.item = item
         try:
             f.load()  # Загрузка готовой модели
             print("Готовая модель успешно загружена!")
